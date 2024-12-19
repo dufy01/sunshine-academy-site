@@ -3,30 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>全宽图片轮播与自动移动标签</title>
+    <title>合并后的程序</title>
     <style>
+        /* 页面基础样式 */
         body {
             margin: 0;
             padding: 0;
             height: 100vh;
-            overflow: hidden; /* 防止滚动条 */
-            background-image: url('photo_brack.png'); /* 使用同目录下的背景图片 */
-            background-size: cover; /* 背景图片填满页面 */
-            background-position: center; /* 居中显示背景图片 */
+            overflow: hidden;
+            background-image: url('photo_brack.png');
+            background-size: cover;
+            background-position: center;
             font-family: Arial, sans-serif;
         }
 
+        /* 动态移动标签样式 */
         .moving-label {
             position: absolute;
             top: 50px;
             left: 50px;
-            background-color: rgba(255, 255, 255, 0.8); /* 半透明白色背景 */
-            border: 2px solid #b22222; /* 深红色边框 */
-            border-radius: 10px; /* 圆角边框 */
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 2px solid #b22222;
+            border-radius: 10px;
             padding: 20px 30px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 阴影效果 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
-            color: #b22222; /* 深红色字体 */
+            color: #b22222;
             font-size: 1.3em;
             font-weight: bold;
             line-height: 1.5;
@@ -35,7 +37,7 @@
         .moving-label p {
             margin: 10px 0;
             font-size: 0.9em;
-            color: #333; /* 辅助文字颜色 */
+            color: #333;
             font-weight: normal;
         }
 
@@ -44,7 +46,7 @@
             padding: 8px 16px;
             font-size: 1em;
             color: #fff;
-            background-color: #b22222; /* 深红色按钮背景 */
+            background-color: #b22222;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -52,62 +54,138 @@
         }
 
         .moving-label button:hover {
-            background-color: #8b1a1a; /* 按钮悬停颜色 */
+            background-color: #8b1a1a;
+        }
+
+        /* 按键区域样式 */
+        .option-list {
+            position: absolute;
+            left: 100px; /* 按键框整体右移 50px */
+            top: 50%;
+            transform: translateY(-50%);
+            width: 200px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 2px solid #b22222;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            font-size: 1em;
+            color: #b22222;
+        }
+
+        .option-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .option-list ul li {
+            margin: 10px 0;
+        }
+
+        .option-list ul li button {
+            display: block;
+            width: 100%;
+            padding: 8px 16px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #b22222;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        .option-list ul li button:hover {
+            background-color: #8b1a1a;
+        }
+
+        /* 图片展示区域样式 */
+        .image-display {
+            position: absolute;
+            right: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 800px;
+            height: 600px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 2px solid #b22222;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .image-display img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         /* 全宽图片轮播样式 */
         .carousel {
             position: absolute;
-            bottom: 0; /* 靠页面底部 */
+            bottom: 0;
             left: 0;
-            width: 100%; /* 轮播窗口全宽 */
-            height: 292px; /* 高度保持图片的比例 */
-            overflow: hidden; /* 隐藏超出内容 */
-            white-space: nowrap; /* 防止内容换行 */
+            width: 100%;
+            height: 292px;
+            overflow: hidden;
+            white-space: nowrap;
         }
 
         .carousel-track {
             display: flex;
-            animation: scroll 20s linear infinite; /* 20秒循环滚动 */
+            animation: scroll 20s linear infinite;
         }
 
         .carousel img {
-            width: 648px; /* 每张图片的宽度 */
-            height: 292px; /* 每张图片的高度 */
-            object-fit: cover; /* 确保图片适应尺寸，不变形 */
+            width: 648px;
+            height: 292px;
+            object-fit: cover;
         }
 
-        /* 滚动动画 */
         @keyframes scroll {
             0% {
                 transform: translateX(0);
             }
             100% {
-                transform: translateX(-100%); /* 滚动一个窗口的宽度 */
+                transform: translateX(-100%);
             }
         }
     </style>
 </head>
 <body>
-    <!-- 自动移动的标签 -->
+    <!-- 动态移动的标签 -->
     <div class="moving-label" id="movingLabel">
         欢迎来到阳光学院
-        <p>这里是 <strong>AI+Python 学习社群</strong>，致力于提供最好的编程学习环境，<br>
-        探索人工智能与 Python 的无限可能。</p>
+        <p>这里是 <strong>AI+Python 学习社群</strong>，致力于提供最好的编程学习环境，探索人工智能与 Python 的无限可能。</p>
         <button onclick="window.location.href='index.html'">返回首页</button>
     </div>
 
-    <!-- 全宽图片轮播 -->
+    <!-- 按键区域 -->
+    <div class="option-list">
+        <ul>
+            <li><button onclick="showImage('第一章知识结构图.jpg')">第一章</button></li>
+            <li><button onclick="showImage('第二章知识结构图.jpg')">第二章</button></li>
+            <li><button onclick="showImage('第三章知识结构图.jpg')">第三章</button></li>
+            <li><button onclick="showImage('第四章知识结构图.jpg')">第四章</button></li>
+            <li><button onclick="showImage('第五章知识结构图.jpg')">第五章</button></li>
+            <li><button onclick="showImage('第六章知识结构图.jpg')">第六章</button></li>
+            <li><button onclick="showImage('第七章知识结构图.jpg')">第七章</button></li>
+            <li><button onclick="showImage('第八章知识结构图.jpg')">第八章</button></li>
+        </ul>
+    </div>
+
+    <!-- 图片展示框 -->
+    <div class="image-display">
+        <img id="displayImage" src="第一章知识结构图.jpg" alt="展示图片">
+    </div>
+
+    <!-- 图片轮播 -->
     <div class="carousel">
         <div class="carousel-track">
-            <!-- 图片列表，使用相对路径 -->
-            <img src="会议 (1).JPG" alt="会议 1">
-            <img src="会议 (2).JPG" alt="会议 2">
-            <img src="会议 (3).JPG" alt="会议 3">
-            <img src="会议 (4).JPG" alt="会议 4">
-            <img src="会议 (5).JPG" alt="会议 5">
-            <img src="会议 (6).JPG" alt="会议 6">
-            <!-- 为了实现无缝循环，重复图片 -->
             <img src="会议 (1).JPG" alt="会议 1">
             <img src="会议 (2).JPG" alt="会议 2">
             <img src="会议 (3).JPG" alt="会议 3">
@@ -118,45 +196,68 @@
     </div>
 
     <script>
-        // 获取标签和窗口尺寸
+        // 切换图片的功能
+        function showImage(imageName) {
+            document.getElementById('displayImage').src = imageName;
+        }
+
+        // 动态移动标签的功能
         const label = document.getElementById("movingLabel");
         let windowWidth = window.innerWidth;
         let windowHeight = window.innerHeight;
+        let positionX = 50;
+        let positionY = 50;
+        let speedX = 1;
+        let speedY = 1;
 
-        // 初始位置和速度
-        let positionX = 50; // 水平位置
-        let positionY = 50; // 垂直位置
-        let speedX = 1; // 水平速度
-        let speedY = 1; // 垂直速度
-
-        // 移动标签的函数
         function moveLabel() {
             positionX += speedX;
             positionY += speedY;
 
-            // 检查边界并反弹
             if (positionX + label.offsetWidth >= windowWidth || positionX <= 0) {
-                speedX = -speedX; // 水平速度取反
+                speedX = -speedX;
             }
             if (positionY + label.offsetHeight >= windowHeight || positionY <= 0) {
-                speedY = -speedY; // 垂直速度取反
+                speedY = -speedY;
             }
 
-            // 更新标签位置
             label.style.left = positionX + "px";
             label.style.top = positionY + "px";
 
-            requestAnimationFrame(moveLabel); // 循环调用动画帧
+            requestAnimationFrame(moveLabel);
         }
 
-        // 初始化动画
         moveLabel();
 
-        // 窗口大小改变时，更新窗口尺寸
+        // 窗口大小调整时更新标签移动范围
         window.addEventListener("resize", () => {
             windowWidth = window.innerWidth;
             windowHeight = window.innerHeight;
         });
     </script>
+    <style>
+        /* 图片展示框样式 */
+        .image-display {
+            position: absolute;
+            right: 50px; /* 距离右侧 50px */
+            top: 40%; /* 距离顶部 40%（根据您的图片框需求调整） */
+            transform: translateY(-50%); /* 垂直居中 */
+            width: 1000px; /* 展示框宽度 */
+            height: 700px; /* 展示框高度 */
+            background-color: rgba(255, 255, 255, 0.9); /* 半透明背景 */
+            border: 2px solid #b22222; /* 红色边框 */
+            border-radius: 10px; /* 圆角边框 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 阴影效果 */
+            overflow: hidden; /* 隐藏超出的部分 */
+            text-align: center; /* 内容居中 */
+        }
+    
+        .image-display img {
+            width: 100%; /* 图片宽度适配容器 */
+            height: 100%; /* 图片高度适配容器 */
+            object-fit: cover; /* 保持图片比例裁剪 */
+            border-radius: 10px; /* 图片圆角与框保持一致 */
+        }
+    </style>
 </body>
 </html>
