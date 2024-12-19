@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全宽图片轮播与自动移动标签</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden; /* 防止滚动条 */
+            background-image: url('photo_brack.png'); /* 使用同目录下的背景图片 */
+            background-size: cover; /* 背景图片填满页面 */
+            background-position: center; /* 居中显示背景图片 */
+            font-family: Arial, sans-serif;
+        }
+
+        .moving-label {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            background-color: rgba(255, 255, 255, 0.8); /* 半透明白色背景 */
+            border: 2px solid #b22222; /* 深红色边框 */
+            border-radius: 10px; /* 圆角边框 */
+            padding: 20px 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 阴影效果 */
+            text-align: center;
+            color: #b22222; /* 深红色字体 */
+            font-size: 1.3em;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+
+        .moving-label p {
+            margin: 10px 0;
+            font-size: 0.9em;
+            color: #333; /* 辅助文字颜色 */
+            font-weight: normal;
+        }
+
+        .moving-label button {
+            margin-top: 10px;
+            padding: 8px 16px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #b22222; /* 深红色按钮背景 */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .moving-label button:hover {
+            background-color: #8b1a1a; /* 按钮悬停颜色 */
+        }
+
+        /* 全宽图片轮播样式 */
+        .carousel {
+            position: absolute;
+            bottom: 0; /* 靠页面底部 */
+            left: 0;
+            width: 100%; /* 轮播窗口全宽 */
+            height: 292px; /* 高度保持图片的比例 */
+            overflow: hidden; /* 隐藏超出内容 */
+            white-space: nowrap; /* 防止内容换行 */
+        }
+
+        .carousel-track {
+            display: flex;
+            animation: scroll 20s linear infinite; /* 20秒循环滚动 */
+        }
+
+        .carousel img {
+            width: 648px; /* 每张图片的宽度 */
+            height: 292px; /* 每张图片的高度 */
+            object-fit: cover; /* 确保图片适应尺寸，不变形 */
+        }
+
+        /* 滚动动画 */
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-100%); /* 滚动一个窗口的宽度 */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 自动移动的标签 -->
+    <div class="moving-label" id="movingLabel">
+        欢迎来到阳光学院
+        <p>这里是 <strong>AI+Python 学习社群</strong>，致力于提供最好的编程学习环境，<br>
+        探索人工智能与 Python 的无限可能。</p>
+        <button onclick="window.location.href='index.html'">返回首页</button>
+    </div>
+
+    <!-- 全宽图片轮播 -->
+    <div class="carousel">
+        <div class="carousel-track">
+            <!-- 图片列表，使用相对路径 -->
+            <img src="会议 (1).JPG" alt="会议 1">
+            <img src="会议 (2).JPG" alt="会议 2">
+            <img src="会议 (3).JPG" alt="会议 3">
+            <img src="会议 (4).JPG" alt="会议 4">
+            <img src="会议 (5).JPG" alt="会议 5">
+            <img src="会议 (6).JPG" alt="会议 6">
+            <!-- 为了实现无缝循环，重复图片 -->
+            <img src="会议 (1).JPG" alt="会议 1">
+            <img src="会议 (2).JPG" alt="会议 2">
+            <img src="会议 (3).JPG" alt="会议 3">
+            <img src="会议 (4).JPG" alt="会议 4">
+            <img src="会议 (5).JPG" alt="会议 5">
+            <img src="会议 (6).JPG" alt="会议 6">
+        </div>
+    </div>
+
+    <script>
+        // 获取标签和窗口尺寸
+        const label = document.getElementById("movingLabel");
+        let windowWidth = window.innerWidth;
+        let windowHeight = window.innerHeight;
+
+        // 初始位置和速度
+        let positionX = 50; // 水平位置
+        let positionY = 50; // 垂直位置
+        let speedX = 1; // 水平速度
+        let speedY = 1; // 垂直速度
+
+        // 移动标签的函数
+        function moveLabel() {
+            positionX += speedX;
+            positionY += speedY;
+
+            // 检查边界并反弹
+            if (positionX + label.offsetWidth >= windowWidth || positionX <= 0) {
+                speedX = -speedX; // 水平速度取反
+            }
+            if (positionY + label.offsetHeight >= windowHeight || positionY <= 0) {
+                speedY = -speedY; // 垂直速度取反
+            }
+
+            // 更新标签位置
+            label.style.left = positionX + "px";
+            label.style.top = positionY + "px";
+
+            requestAnimationFrame(moveLabel); // 循环调用动画帧
+        }
+
+        // 初始化动画
+        moveLabel();
+
+        // 窗口大小改变时，更新窗口尺寸
+        window.addEventListener("resize", () => {
+            windowWidth = window.innerWidth;
+            windowHeight = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
